@@ -17,3 +17,7 @@
 - Complex technical indicators (RSI, MACD, moving averages)
 - Charts and graphs (numeric display only for v1)
 - Mobile-responsive UI beyond "doesn't break"
+- "Stock Story" — natural-language interpretation of the data per stock (e.g.,
+  "Reliance dropped 7% this week and is near 52-week low"). Could be
+  rule-based (cheap) or AI-generated (richer). Adds an insight layer on top
+  of the raw numbers.
