@@ -11,6 +11,10 @@ from db.session import get_session, init_db
 from db.operations import list_stocks, get_stock_by_ticker, get_recent_prices
 from data.yfinance_source import get_watchlist_summary
 
+from pathlib import Path
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,13 +41,12 @@ def db_session():
         session.close()
 
 
-@app.get("/")
-def root():
+@app.get("/api/health")
+def health():
     """Health check. Confirms the API is alive."""
     return {"status": "ok", "service": "StockWatch", "version": "0.1.0"}
 
-
-@app.get("/stocks")
+@app.get("/api/stocks")
 def get_stocks(session: Session = Depends(db_session)):
     """List all stocks in the watchlist."""
     stocks = list_stocks(session)
@@ -53,7 +56,7 @@ def get_stocks(session: Session = Depends(db_session)):
     ]
 
 
-@app.get("/summary")
+@app.get("/api/summary")
 def get_summary(session: Session = Depends(db_session)):
     """
     Live watchlist summary with 52-week position and recent percent changes.
@@ -85,7 +88,7 @@ def get_summary(session: Session = Depends(db_session)):
     return rows
 
 
-@app.get("/stocks/{ticker}/history")
+@app.get("/api/stocks/{ticker}/history")
 def get_history(
     ticker: str,
     days: int = 30,
@@ -109,3 +112,14 @@ def get_history(
             for p in prices
         ],
     }
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+STATIC_DIR = PROJECT_ROOT / "static"
+
+
+@app.get("/")
+def index():
+    """Serve the dashboard HTML."""
+    return FileResponse(STATIC_DIR / "index.html")
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

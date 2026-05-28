@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StockWatch</title>
+</head>
+<body>
+  <h1>StockWatch</h1>
+  <p>Your watchlist:</p>
+
+  <table id="watchlist-table" border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Name</th>
+        <th>Current Price</th>
+        <th>52w Low</th>
+        <th>52w High</th>
+        <th>52w Position</th>
+        <th>7d Change</th>
+        <th>30d Change</th>
+      </tr>
+    </thead>
+    <tbody id="watchlist-body">
+      <tr><td colspan="8">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <p id="status"></p>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
