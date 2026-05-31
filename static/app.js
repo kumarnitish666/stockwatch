@@ -42,6 +42,7 @@ function buildRow(stock) {
       <td class="px-4 py-3">
         <div class="font-medium">${stock.ticker}</div>
         <div class="text-slate-500 text-xs">${stock.name}</div>
+        <div class="text-slate-600 text-xs mt-1 italic">${stock.story || ""}</div>
       </td>
       <td class="px-4 py-3 text-right font-medium">₹${formatINR(stock.current_price)}</td>
       <td class="px-4 py-3 text-right text-slate-500">₹${formatINR(stock.low_52w)}</td>

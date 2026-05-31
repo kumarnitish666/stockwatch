@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from db.session import get_session, init_db
 from db.operations import list_stocks, get_stock_by_ticker, get_recent_prices
 from data.yfinance_source import get_watchlist_summary
+from data.story import generate_story
 
 from pathlib import Path
 from fastapi.responses import FileResponse
@@ -75,15 +76,20 @@ def get_summary(session: Session = Depends(db_session)):
 
     rows = []
     for ticker, row in summary_df.iterrows():
+        position_52w = float(row["position_52w_pct"])
+        change_7d = float(row["change_7d_pct"]) if row["change_7d_pct"] is not None else None
+        change_30d = float(row["change_30d_pct"]) if row["change_30d_pct"] is not None else None
+
         rows.append({
             "ticker": ticker,
             "name": name_by_ticker.get(ticker, ticker),
             "current_price": float(row["current_price"]),
             "high_52w": float(row["high_52w"]),
             "low_52w": float(row["low_52w"]),
-            "position_52w_pct": float(row["position_52w_pct"]),
-            "change_7d_pct": float(row["change_7d_pct"]) if row["change_7d_pct"] is not None else None,
-            "change_30d_pct": float(row["change_30d_pct"]) if row["change_30d_pct"] is not None else None,
+            "position_52w_pct": position_52w,
+            "change_7d_pct": change_7d,
+            "change_30d_pct": change_30d,
+            "story": generate_story(position_52w, change_7d, change_30d),
         })
     return rows
 
